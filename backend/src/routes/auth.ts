@@ -2,6 +2,7 @@ import express from 'express';
 import { prisma } from '../prisma';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { authenticateToken } from '../middleware/auth';
 
 const router = express.Router();
 
@@ -33,6 +34,19 @@ router.post('/refresh', async (req, res) => {
   } catch (err) {
     return res.status(401).json({ error: 'Invalid refresh token' });
   }
+});
+
+// POST /api/auth/change-password
+router.post('/change-password', authenticateToken, async (req: any, res) => {
+  const { oldPassword, newPassword } = req.body;
+  if (!oldPassword || !newPassword) return res.status(400).json({ error: 'oldPassword and newPassword required' });
+  const user = await prisma.user.findUnique({ where: { id: Number(req.user.id) } });
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  const match = await bcrypt.compare(oldPassword, user.password);
+  if (!match) return res.status(401).json({ error: 'Old password incorrect' });
+  const hashed = await bcrypt.hash(newPassword, 10);
+  await prisma.user.update({ where: { id: user.id }, data: { password: hashed } });
+  res.json({ ok: true });
 });
 
 export default router;

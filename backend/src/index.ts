@@ -4,11 +4,15 @@ import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import authRouter from './routes/auth';
 import productsRouter from './routes/products';
+import usersRouter from './routes/users';
+import unitsRouter from './routes/units';
 import { authenticateToken } from './middleware/auth';
 import salesRouter from './routes/sales';
 import purchasesRouter from './routes/purchases';
 import stockRouter from './routes/stock';
 import cashbookRouter from './routes/cashbook';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 
 dotenv.config();
 const app = express();
@@ -16,10 +20,15 @@ const prisma = new PrismaClient();
 app.use(cors());
 app.use(express.json());
 
+const swaggerDocument = YAML.load('./docs/openapi.yaml');
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 app.get('/api/health', (req, res) => res.json({ ok: true, env: process.env.NODE_ENV || 'development' }));
 
 app.use('/api/auth', authRouter);
 app.use('/api/products', authenticateToken, productsRouter);
+app.use('/api/users', authenticateToken, usersRouter);
+app.use('/api/units', authenticateToken, unitsRouter);
 app.use('/api/sales', authenticateToken, salesRouter);
 app.use('/api/purchases', authenticateToken, purchasesRouter);
 app.use('/api/stock', authenticateToken, stockRouter);
