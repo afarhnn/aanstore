@@ -9,7 +9,7 @@ async function main() {
     update: { password: hashed },
     create: { name: 'Admin', email: 'admin@aanstore.local', password: hashed, role: 'admin' }
   });
-  const wh = await prisma.warehouse.upsert({ where: { id: 1 }, update: {}, create: { id: 1, name: 'Toko Utama', address: 'Alamat Toko' } });
+  const wh = await prisma.warehouse.upsert({ where: { id: 1 }, update: {}, create: { id: 1, name: 'AanStore', address: 'Alamat Toko' } });
   const p = await prisma.product.create({ data: { brand: 'ContohBrand', model: 'Model X', category: 'Smartphone', description: 'Sample phone', variants: { create: [{ color: 'Black', capacity: '128GB', priceBuy: 200.0, priceSell: 250.0 }] } }, include: { variants: true } });
   const variant = p.variants[0];
   // create stock balance only if not exists
