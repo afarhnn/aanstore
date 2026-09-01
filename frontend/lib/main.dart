@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(const AanStoreApp());
@@ -51,18 +52,8 @@ class LoginPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // logo placeholder
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: const Color(0xFF0B3A61),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Text('Aan', style: TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold)),
-              ),
-            ),
+            // logo
+            SvgPicture.asset('assets/logo.svg', width: 120, height: 120),
             const SizedBox(height: 24),
             TextField(decoration: const InputDecoration(labelText: 'Email')),
             const SizedBox(height: 8),

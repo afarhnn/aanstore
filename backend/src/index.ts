@@ -5,6 +5,10 @@ import { PrismaClient } from '@prisma/client';
 import authRouter from './routes/auth';
 import productsRouter from './routes/products';
 import { authenticateToken } from './middleware/auth';
+import salesRouter from './routes/sales';
+import purchasesRouter from './routes/purchases';
+import stockRouter from './routes/stock';
+import cashbookRouter from './routes/cashbook';
 
 dotenv.config();
 const app = express();
@@ -16,6 +20,10 @@ app.get('/api/health', (req, res) => res.json({ ok: true, env: process.env.NODE_
 
 app.use('/api/auth', authRouter);
 app.use('/api/products', authenticateToken, productsRouter);
+app.use('/api/sales', authenticateToken, salesRouter);
+app.use('/api/purchases', authenticateToken, purchasesRouter);
+app.use('/api/stock', authenticateToken, stockRouter);
+app.use('/api/cashbook', authenticateToken, cashbookRouter);
 
 // simple protected route example
 app.get('/api/me', authenticateToken, async (req: any, res) => {
